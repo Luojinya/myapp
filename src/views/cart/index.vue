@@ -8,11 +8,6 @@
 <script>
 export default {
   beforeRouteEnter(to,from,next){
-    // if(localStorage.getItem("isLogin")==="ok"){
-    //   next()
-    // }else{
-    //   next("/login")
-    // }
     next(vm=>{
       const {$store: {state: { loginState } } } =vm
       if(loginState === "ok"){
@@ -21,8 +16,11 @@ export default {
         next('/login')
       }
     })
-
-
+  },
+  mounted(){
+    fetch('http://10.11.56.121:3000/124').then(res=>res.json()).then(data=>{
+      console.log("luoinfo:" + data[0].data.literature[0].details)
+    })
 
   }
 }

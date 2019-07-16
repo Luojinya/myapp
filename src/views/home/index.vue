@@ -36,6 +36,7 @@ Vue.use(PullRefresh)
 // t=[...t,[555,555,555]]
 // console.log(t)
 export default {
+ 
   data () { 
     return { 
       bannerlist:[],
@@ -95,13 +96,12 @@ export default {
         item='https://www.daxunxun.com'+item
         arr.push(item)
       })
-      console.log(arr)
       this.bannerlist=arr
     })
 
 
     fetch("https://www.daxunxun.com/douban").then(res=>res.json()).then(data=>{
-      // console.log(data)
+      // console.log("first:" + data)
       this.daxun = data
     })
 
@@ -131,7 +131,7 @@ export default {
 
 <style lang="scss">
   .van-swipe{
-    height: 1.5rem;
+    height: 2rem;
     img{
       width: 100%;
     }

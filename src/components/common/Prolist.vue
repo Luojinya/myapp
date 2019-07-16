@@ -17,23 +17,6 @@
       </div>
     </li>
 
-    <!-- 声明式 导航/跳转 -->
-    <!-- <router-link  tag="li" :to="{name:'detail',params:{id:item.id}}"  class="proitem" v-for="(item, index) of wuxunxun" :key="index">
-      <div class="itemimg"> 
-        <img :src="item.images.small" :alt="item.alt" />
-      </div>
-      <div class="iteminfo">
-        <h3>{{ item.title }}---{{ item.rating.average }}</h3>
-        <div class="directors">
-          导演：<span v-for="(itm, idx) of item.directors" :key="idx">{{ itm.name }}/</span>
-        </div>
-        <div class="casts">
-          演员： <span v-for="(itm, idx) of item.casts" :key="idx">{{ itm.name }}/</span>
-        </div>
-        <Rating :rating="(item.rating.average/2).toFixed(1)" />
-      </div>
-    </router-link> -->
-
   </ul>
 </template>
 <script>
@@ -43,14 +26,14 @@ export default {
   props: {
     wuxunxun: Array
   },
-  components:{
+  components: {
     Rating
   },
-  methods:{
-    goDetail(id){
+  methods:  {
+    goDetail (id) {
       // this.$router.push('/detail/'+id)//string
       // this.$router.push({name:'detail',params:{ id:id }})
-      this.$router.push({path:'/detail/'+id})
+      this.$router.push({ path: '/detail/' + id })
     }
   }
 }

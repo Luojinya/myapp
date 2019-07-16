@@ -78,7 +78,7 @@ const router = new Router({
       // component: () => import('./views/kind/index.vue')
       components:{
         default: () => import('./views/kind/index.vue')   ,
-        // footer:Footer
+        footer:Footer
       }
     },
     {

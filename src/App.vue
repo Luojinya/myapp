@@ -27,6 +27,9 @@
       .header {
         @include rect(100%, 0.44rem);
         @include background-color(rgb(25, 109, 20));
+        @include color(rgb(255,255,255));
+        @include text-align(center);
+        @include line-height(0.44rem);
       }
       .content {
         @include overflow();
