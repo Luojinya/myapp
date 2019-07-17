@@ -30,7 +30,7 @@
             </van-grid>
 
           <van-grid :column-num="3" class="mg">
-            <van-grid-item v-for="value in 6" :key="value" :icon= "imgs[value]" :text="infs[value]" />
+            <van-grid-item v-for="value in 6" :key="value" :icon= "imgs[value]" :text="infs[value]" @click="ckmg(ids[value])" />
           </van-grid>
 
           <div class="m0">
@@ -86,12 +86,13 @@ export default {
       navherf:[],
       infot:[],
       imgs:[],
-      infs:[]
+      infs:[],
+      ids:[]
     };
   },
   mounted(){
     fetch('http://10.11.56.121:3000/124').then(res=>res.json()).then(data=>{
-      var info=data[0].data ,arr=[],arr1=[],arr2=[]
+      var info=data[0].data ,arr=[],arr1=[],arr2=[],arrid=[]
       for(var key in info){
         if (info[key].length>5){
           arr2.push(key)
@@ -100,6 +101,7 @@ export default {
       var infr=info[arr2[this.activeKey]]
       for(var i=0;i<infr.length;i++){
         arr.push(infr[i].src)
+        arrid.push(infr[i].goods_id)
         let s=infr[i].short_name
         if(s.length>=4){
           s = s.slice(0,3)+"..."
@@ -109,6 +111,7 @@ export default {
       this.imgs=arr
       this.infs=arr1
       this.infot=arr2
+      this.ids=arrid
     })
 
     this.navherf=[
@@ -123,7 +126,7 @@ export default {
   methods:{
     getchange(){
       fetch('http://10.11.56.121:3000/124').then(res=>res.json()).then(data=>{
-        var info=data[0].data ,arr=[],arr1=[],arr2=[]
+        var info=data[0].data ,arr=[],arr1=[],arr2=[],arrid=[]
         for(var key in info){
           if (info[key].length>5){
             arr2.push(key)
@@ -132,6 +135,7 @@ export default {
         var infr=info[arr2[this.activeKey]]
         for(var i=0;i<infr.length;i++){
           arr.push(infr[i].src)
+          arrid.push(infr[i].goods_id)
           let s=infr[i].short_name
           if(s.length>=4){
             s = s.slice(0,3)+"..."
@@ -148,14 +152,20 @@ export default {
           }
           if(tab.length===7){break}
         }
-        let ar0=[],ar1=[]
+        let ar0=[],ar1=[],arid=[]
         for (let i = 0; i < tab.length; i++) {
           ar0.push(arr[tab[i]])
           ar1.push(arr1[tab[i]])
+          arid.push(arrid[tab[i]])
         }
         this.imgs=ar0
         this.infs=ar1
+        this.ids=arid
       })
+    },
+    ckmg(id){
+      //console.log(id)
+      this.$router.push({ path: '/detail/' + id })
     }
   }
   
