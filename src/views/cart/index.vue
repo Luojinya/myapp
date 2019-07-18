@@ -9,7 +9,7 @@
       />
     </header>
 
-    <van-checkbox-group class="card-goods" v-model="checkedGoods">
+    <van-checkbox-group class="card-goods" v-model="checkedGoods" v-show="goods.length!==0">
       <van-checkbox
         class="card-goods__item"
         v-for="item in goods"
@@ -26,6 +26,12 @@
 
       </van-checkbox>
     </van-checkbox-group>
+    <div class="carnil" v-show="goods.length === 0">
+      <img src="http://img3.imgtn.bdimg.com/it/u=1864153355,1186988212&fm=26&gp=0.jpg" alt="">
+      <span>购物车空空如也……</span><br/>
+      <van-button class="btn" type="default" size="small" @click="gogo">再去逛逛</van-button>
+      <van-button class="btn" type="default" size="small" @click="like">进入收藏</van-button>
+    </div>
     <van-submit-bar
       :price="totalPrice"
       :disabled="!checkedGoods.length"
@@ -42,6 +48,9 @@
 import Vue from 'vue'
 import { SubmitBar,Card,NavBar,Icon } from 'vant';
 import { Checkbox, CheckboxGroup,Toast } from 'vant';
+import { Button } from 'vant';
+
+Vue.use(Button);
 Vue.use(Icon);
 Vue.use(NavBar);
 Vue.use(Card);
@@ -56,26 +65,29 @@ export default {
   },
     data() {
     return {
+      loging:false,
       checked: true,
-      checkedGoods: ['1', '2', '3'],
-      checkmax: ['1', '2', '3'],
+      checkedGoods: [],
+      checkmax: [],
       checkmin:[],
-      goods: [{
-        id: '1',
+      goods:["123A"],
+      datas:"",
+      goodss: [{
+        id: '14',
         title: '《笔尖上的清宫苑》',
         desc: '一秒梦回大清，揭开深宫秘密！',
         price: 2000,
         num: 1,
         thumb: 'http://img3m5.ddimg.cn/35/8/27878435-1_b_5.jpg'
       }, {
-        id: '2',
+        id: '21',
         title: '李清照，前半生比林徽因美满',
         desc: '你若安好 便是晴天',
         price: 5000,
         num: 2,
         thumb: 'http://img3m5.ddimg.cn/28/1/27874765-1_b_2.jpg'
       }, {
-        id: '3',
+        id: '32',
         title: '《杨绛传》',
         desc: '民国女子 : 她们谋生亦谋爱',
         price: 4000,
@@ -109,9 +121,12 @@ export default {
     }
   },
   mounted(){
-    fetch('http://10.11.56.121:3000/124').then(res=>res.json()).then(data=>{
-      console.log("luoinfo:" + data[0].data.literature[0].details)
-    })
+    fetch('http://10.11.56.121:3000/124').then(res=>res.json()).then(data=>{this.datas=data })
+    this.ljy()
+
+    if(this.goods.length===0){
+      this.checked=false;
+    }
   },
   methods:{
     onClickLeft(){
@@ -135,6 +150,64 @@ export default {
 
     onSubmit() {
       Toast('点击结算');
+    },
+    gogo(){
+      this.$router.push('/home')
+    },
+    like(){
+      this.$router.push('/kind')
+    },
+    ljy(){
+    fetch('http://10.11.56.121:3000/128?username=18717771641').then(res=>res.json()).then(data=>{
+      const {$store: {state: { loginState } } } =this
+      if(loginState === "ok" && data.length !==0  ){
+        let arrs=[],goodt=[],goodobj={},arrid=[]
+        this.goods=[]
+        for (let i = 0; i < data.length; i++) {
+          // 商品数量
+          goodobj.num = data[i].num
+          
+          // ===找商品具体数据===
+          //商品ID
+          var spid = data[i].id
+           arrs.push(String(spid))
+            if(! this.datas[0]){
+              this.ljy()
+              return false 
+            }
+           console.log(this.datas[0])
+            var info=this.datas[0].data
+            var bk=false 
+            // 获取所有数据的类型名
+            for(var key in info){
+              if (info[key].length>5){
+                for (let j = 0; j < info[key].length; j++) {
+                  // 找到对应商品
+                  if (info[key][j].goods_id===spid){
+                    // 对应商品ID
+                    goodobj.id=String(spid)
+                    // 商品标题
+                    goodobj.title=info[key][j].short_name.slice(0,4)
+                    // 商品描述
+                    goodobj.desc=info[key][j].goods_name.slice(0,8)
+                    // 商品价格
+                    goodobj.price=info[key][j].group_price*100
+                    // 商品链接
+                    goodobj.thumb=info[key][j].src
+                    // 加入数组
+                    this.goods.push(goodobj)
+                    goodobj={}
+                    bk=true;
+                  }
+                  if(bk){break}
+                }
+              }
+              if(bk){break}
+            }
+        }
+        this.checkedGoods=this.checkmax=arrs
+      }
+    })
     }
 
   }
@@ -146,9 +219,8 @@ export default {
   margin-left: 10px;
 }
 .card-goods {
-  padding: 10px 0;
+  // padding: 10px 0;
   background-color: #fff;
-
   &__item {
     position: relative;
     background-color: #fafafa;
@@ -169,6 +241,24 @@ export default {
     .van-card__price {
       color: #f44;
     }
+  }
+}
+.carnil{
+  position: relative;
+  top:-22px;
+  height: 120%;
+  background-color: #f6f6f6;
+  text-align: center;
+  img{
+    width:100%
+  }
+  span{
+    width:100%;
+    color:#999;
+  }
+  .btn{
+    margin:5px 15px;
+    border-radius: 5px;
   }
 }
 </style>
