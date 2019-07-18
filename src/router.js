@@ -61,7 +61,7 @@ const router = new Router({
       // component: () => import('./views/cart/index.vue')
       components:{
         default: () => import('./views/cart/index.vue')   ,
-        footer:Footer
+        // footer:Footer
       },
       // 路由独享守卫 一般不推荐使用 本来就是路由配置文件 不要写业务逻辑
       // beforeEnter(to,from,next){
