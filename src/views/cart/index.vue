@@ -1,14 +1,14 @@
 <template>
-  <div>
-    <header class="header">
+  <div class="container">
+    <header class="cartheader">
       <van-nav-bar
         title="购物车"
-        left-text="返回"
+        left-text=""
         left-arrow
         @click-left="onClickLeft"
       />
     </header>
-
+    <div class="content">
     <van-checkbox-group class="card-goods" v-model="checkedGoods" v-show="goods.length!==0">
       <van-checkbox
         class="card-goods__item"
@@ -41,21 +41,20 @@
     <van-checkbox class="chebox" v-model="checked" @click="ckbox">全选</van-checkbox>
     </van-submit-bar>
   </div>
+  </div>
 </template>
-
 
 <script>
 import Vue from 'vue'
-import { SubmitBar,Card,NavBar,Icon } from 'vant';
-import { Checkbox, CheckboxGroup,Toast } from 'vant';
-import { Button } from 'vant';
-
-Vue.use(Button);
-Vue.use(Icon);
-Vue.use(NavBar);
-Vue.use(Card);
-Vue.use(SubmitBar);
-Vue.use(Checkbox).use(CheckboxGroup);
+import { SubmitBar, Card, NavBar, Icon } from 'vant'
+import { Checkbox, CheckboxGroup, Toast } from 'vant'
+import { Button } from 'vant'
+Vue.use(Button)
+Vue.use(Icon)
+Vue.use(NavBar)
+Vue.use(Card)
+Vue.use(SubmitBar)
+Vue.use(Checkbox).use(CheckboxGroup)
 export default {
   components: {
     [Card.name]: Card,
@@ -63,15 +62,16 @@ export default {
     [SubmitBar.name]: SubmitBar,
     [CheckboxGroup.name]: CheckboxGroup
   },
-    data() {
+  data () {
     return {
-      loging:false,
+      loging: false,
       checked: true,
       checkedGoods: [],
       checkmax: [],
-      checkmin:[],
-      goods:["123A"],
-      datas:"",
+      checkmin: [],
+      goods: ['123A'],
+      datas: '',
+      username: '',
       goodss: [{
         id: '14',
         title: '《笔尖上的清宫苑》',
@@ -94,12 +94,12 @@ export default {
         num: 2,
         thumb: 'http://img3m6.ddimg.cn/28/31/27872686-1_b_3.jpg'
       }]
-    };
+    }
   },
-  beforeRouteEnter(to,from,next){
-    next(vm=>{
-      const {$store: {state: { loginState } } } =vm
-      if(loginState === "ok"){
+  beforeRouteEnter (to, from, next) {
+    next(vm => {
+      const {$store: {state: { loginState } } } = vm
+      if (loginState === 'ok') {
         next()
       }else{
         next('/login')
@@ -107,113 +107,115 @@ export default {
     })
   },
   computed: {
-    submitBarText() {
+    submitBarText () {
       const count = this.checkedGoods.length;
-      if (count===this.checkmax.length){
-        this.checked=true
+      if (count === this.checkmax.length) {
+        this.checked = true
       } else {
-        this.checked=false
+        this.checked = false
       }
-      return '结算' + (count ? `(${count})` : '');
+      return '结算' + (count ? `(${count})` : '')
     },
-    totalPrice() {
-      return this.goods.reduce((total, item) => total + (this.checkedGoods.indexOf(item.id) !== -1 ? item.price*item.num : 0), 0);
+    totalPrice () {
+      return this.goods.reduce((total, item) => total + (this.checkedGoods.indexOf(item.id) !== -1 ? item.price*item.num : 0), 0)
     }
   },
-  mounted(){
+  mounted () {
     fetch('http://10.11.56.121:3000/124').then(res=>res.json()).then(data=>{this.datas=data })
     this.ljy()
 
-    if(this.goods.length===0){
-      this.checked=false;
+    if (this.goods.length === 0) {
+      this.checked = false
     }
   },
   methods:{
-    onClickLeft(){
+    onClickLeft () {
       this.$router.back()
     },
-    onSubmit(){
+    onSubmit () {
 
     },
-    ckbox(){
+    ckbox () {
       // this.checked=!this.checked;
      // console.log(this.checked)
-      if(!this.checked){
-        this.checkedGoods=this.checkmax
-      }else{
-        this.checkedGoods=this.checkmin
+      if (!this.checked) {
+        this.checkedGoods = this.checkmax
+      } else {
+        this.checkedGoods = this.checkmin
       }
     },
-    formatPrice(price) {
+    formatPrice (price) {
       return (price / 100).toFixed(2);
     },
 
-    onSubmit() {
-      Toast('点击结算');
+    onSubmit () {
+      Toast('结算系统升级中……敬请期待！');
     },
-    gogo(){
+    gogo () {
       this.$router.push('/home')
     },
-    like(){
+    like () {
       this.$router.push('/kind')
-    },
-    ljy(){
-    fetch('http://10.11.56.121:3000/128?username=18717771641').then(res=>res.json()).then(data=>{
-      const {$store: {state: { loginState } } } =this
-      if(loginState === "ok" && data.length !==0  ){
-        let arrs=[],goodt=[],goodobj={},arrid=[]
-        this.goods=[]
+    }, 
+    ljy () {
+      this.username = localStorage.getItem('username')
+    fetch('http://10.11.56.121:3000/128?username=' + this.username).then(res => res.json()).then(data => {
+      const {$store: {state: { loginState } } } = this
+      if (loginState === "ok" && data.length !== 0  ) {
+        let arrs = [],goodt = [],goodobj = {},arrid = []
+        this.goods = []
         for (let i = 0; i < data.length; i++) {
           // 商品数量
-          goodobj.num = data[i].num
-          
+            goodobj.num = data[i].num
           // ===找商品具体数据===
           //商品ID
-          var spid = data[i].id
-           arrs.push(String(spid))
-            if(! this.datas[0]){
+            var spid = data[i].id
+            arrs.push(String(spid))
+          if (!this.datas[0]) {
               this.ljy()
-              return false 
-            }
-           console.log(this.datas[0])
-            var info=this.datas[0].data
-            var bk=false 
+              return false
+          }
+            console.log(this.datas[0])
+            var info = this.datas[0].data
+            var bk = false
             // 获取所有数据的类型名
-            for(var key in info){
-              if (info[key].length>5){
+            for (var key in info) {
+              if (info[key].length > 5) {
                 for (let j = 0; j < info[key].length; j++) {
                   // 找到对应商品
-                  if (info[key][j].goods_id===spid){
+                  if (info[key][j].goods_id === spid) {
                     // 对应商品ID
-                    goodobj.id=String(spid)
+                    goodobj.id = String(spid)
                     // 商品标题
-                    goodobj.title=info[key][j].short_name.slice(0,4)
+                    goodobj.title = info[key][j].short_name.slice(0, 4)
                     // 商品描述
-                    goodobj.desc=info[key][j].goods_name.slice(0,8)
+                    goodobj.desc = info[key][j].goods_name.slice(0, 8)
                     // 商品价格
-                    goodobj.price=info[key][j].group_price*100
+                    goodobj.price = info[key][j].group_price * 100
                     // 商品链接
-                    goodobj.thumb=info[key][j].src
+                    goodobj.thumb = info[key][j].src
                     // 加入数组
                     this.goods.push(goodobj)
-                    goodobj={}
-                    bk=true;
+                    goodobj = {}
+                    bk = true
                   }
-                  if(bk){break}
+                  if (bk) {
+                    break
+                  }
                 }
               }
-              if(bk){break}
+              if (bk) {
+                break
+              }
             }
+          }
+          this.checkedGoods = this.checkmax = arrs
         }
-        this.checkedGoods=this.checkmax=arrs
-      }
-    })
+      })
     }
-
   }
 }
 </script>
-
 <style lang="scss">
 .chebox{
   margin-left: 10px;

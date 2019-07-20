@@ -1,25 +1,5 @@
 <template>
-<div class="container">
-  <div class="header">
-    <div class="left">
-      <span class="iconfont icon-left" @click="back"></span>
-    </div>
-    <div class="middle">
-      <ul>
-        <li :class="tag === true ? 'active' : '' " @click="change">商品</li>
-        <li @click="change" :class="tag === false ? 'active' : '' ">详情</li>
-        <li>评论</li>
-        <li>推荐</li>
-      </ul>
-    </div>
-    <div class="right">
-      <span class="iconfont icon-menu"></span>
-    </div>
-  </div>
-  <div class="content" v-if=!tag>
-    <img :src="detail" alt="" style="width:100%;">
-  </div>
-    <div class="content" v-if=tag>
+    <div class="content">
       <div class="banner">
         <van-swipe :autoplay="3000" indicator-color="white" class="bannerbox">
          <van-swipe-item v-for="(item, index) of bannerlist" :key = "index">
@@ -28,11 +8,10 @@
        </van-swipe>
       </div>
       <div class="info">
-        <img src="http://img1.imgtn.bdimg.com/it/u=1859477950,3021007741&fm=26&gp=0.jpg" alt="">{{ info }}
+        <img src="http://img1.imgtn.bdimg.com/it/u=1859477950,3021007741&fm=26&gp=0.jpg" alt="">{{ list }}
       </div>
-    </div>
-    <van-goods-action>
-    <!-- <van-sku
+       <van-goods-action>
+    <van-sku
       v-model="show"
       stepper-title="我要买"
       :sku="sku"
@@ -41,7 +20,7 @@
       reset-stepper-on-hide
       :initial-sku="initialSku"
     >
-    </van-sku> -->
+    </van-sku>
   <van-goods-action-icon
     icon="chat-o"
     text="客服"
@@ -69,7 +48,7 @@
     @click="buy"
   />
 </van-goods-action>
-  </div>
+</div>
 </template>
 <script>
 import Vue from 'vue'
@@ -81,16 +60,11 @@ Vue.use(Swipe).use(SwipeItem)
 export default {
   data () {
     return {
-      url: '',
-      title: '',
-      rating: '',
-      list: {},
       a: {},
       info: '',
+      list: {},
       bannerlist: [],
       show: false,
-      detail: [],
-      tag: true,
       initialSku: {
         // 键：skuKeyStr（sku 组合列表中当前类目对应的 key 值）
         // 值：skuValueId（规格值 id）
@@ -155,31 +129,11 @@ export default {
       }
     }
   },
+  props: {
+    list: Object
+  },
   created () {
-    this.url = this.$route.params
-    console.log(typeof this.url, this.url.id)
-    // console.log(this.url.substring(29))
-    fetch('http://10.11.56.121:3000/124').then(res => res.json()).then(data => {
-      this.a = data[0].data
-      // console.log(data[0].data)
-      for (this.i in data[0].data) {
-        // console.log(data[0].data[this.i])
-        for (let j = 0; j < data[0].data[this.i].length; j++) {
-          // console.log(Math.round(this.url.substring(29)), data[0].data[this.i][j].goods_id)
-          if (Math.round(this.url.id) === data[0].data[this.i][j].goods_id) {
-            this.list = data[0].data[this.i][j]
-            this.goods.title = this.list.short_name
-            this.goods.picture = this.list.src
-            this.info = this.list.goods_name
-            this.list.price = this.list.group_price
-            this.detail = this.list.details
-            console.log(typeof this.info)
-            this.bannerlist = this.list.Commoditydetails_img.split(' ')
-            console.log(this.detail)
-          }
-        }
-      }
-    })
+     console.log(list)
   },
   methods: {
     chart () {
@@ -192,33 +146,8 @@ export default {
       console.log('店铺')
     },
     addCart () {
-      // console.log('加入购物车')
-      // this.show = true
-      if (this.$store.state.loginState === 'ok') {
-        const username = localStorage.getItem('username')
-        const num = 1
-        const id = this.$route.params.id
-        const url = `http://10.11.56.121:3000/123?username=${username}&num=${num}&id=${id}`
-        const url1 = `http://10.11.56.121:3000/121?username=${username}&id=${id}`
-        console.log(url1)
-        fetch(url1).then(res => res.json()).then(data => {
-          console.log(JSON.stringify(data))
-          console.log(JSON.stringify(data) === '[]')
-          if (JSON.stringify(data) === '[]') {
-            fetch(url).then(res => res.json()).then(data => {
-              console.log(data)
-            })
-          } else {
-            const num1 = Math.round(data[0].num) + 1
-            const url2 = `http://10.11.56.121:3000/120?username=${username}&num=${num1}&id=${id}`
-            fetch(url2).then(res => res.json()).then(data => {
-              console.log(data)
-            })
-          }
-        })
-      } else {
-        this.$router.push('/login')
-      }
+      console.log('加入购物车')
+      this.show = true
     },
     buy () {
       console.log('立即购买')
@@ -228,37 +157,7 @@ export default {
     },
     share () {
       console.log('分享')
-    },
-    change () {
-      this.tag = !this.tag
     }
   }
 }
 </script>
-<style lang="scss">
-@import '@/lib/reset.scss';
-.banner{
-  height:3.8rem;
-  .bannerbox{
-    height:100%;
-  }
-  img{
-    width:100%;
-  }
-  }
-  .info{
-    img{
-      width:6%;
-    }
-  }
-  .middle{
-    li{
-      float: left;
-      margin-left:10px;
-      font-size:0.2rem;
-    }
-  }
-  .active{
-    color: red;
-  }
-</style>

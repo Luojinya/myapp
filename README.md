@@ -1,4 +1,4 @@
-# myapp
+# newpro
 
 ## Project setup
 ```

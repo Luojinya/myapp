@@ -30,7 +30,7 @@
           required
         />
       </van-cell-group>
-      <van-button type="primary" size="normal" @click="login" :block="true" :disabled= "flage" :loading= "flage" loading-text="登陆中...">登录</van-button>
+      <van-button type="primary" size="normal" @click="login" :block="true">登录</van-button>
     </div>
   </div>
 </template>
@@ -49,8 +49,7 @@ export default {
   data () {
     return {
       username: '18717771641',
-      password: '123456',
-      flage:false
+      password: '123456'
     }
   },
   computed: {
@@ -93,9 +92,11 @@ export default {
   },
   methods: {
     onClickLeft () {
+      console.log(1)
       this.$router.back()
     },
     onClickRight () {
+      console.log(1)
       this.$router.replace('/register')
     },
     login () {
@@ -107,7 +108,6 @@ export default {
         Toast('密码格式错误')
         return null
       }
-      this.flage=true
       // 提交数据到服务器
       fetch('https://www.daxunxun.com/users/login', {
         method: 'post',
@@ -116,15 +116,10 @@ export default {
         },
         body: 'username=' + this.username + '&password=' + this.password
       }).then(res => res.json()).then(data => {
-        this.flage=false
         if (data === 1) {
           Toast('登录成功')
-          // localStorage.setItem("isLogin","ok")
-          // 如果使用的token，当你登陆成功，后端返回了一个token值，你将此值存储到本地
-          // localStorage.setItem('token', 'sakhsdkjghjksdhfkjhsadhjahdkjsha')
-          // 以后在需要验证用户是否登陆时，将此值取出来，然后随着请求发送到服务器，数据库中会有一个字段与之对应，如果匹配，表适用户是登陆的，如果不匹配，表示未登录
-          // localStorage.setItem('isLogin', 'ok')
-          this.$store.commit('changeLoginState', 'ok')
+          localStorage.setItem('username', this.username)
+          this.$store.commit('changrLoginState', 'ok')
           this.$router.back()
         } else if (data === 2) {
           Dialog.confirm({

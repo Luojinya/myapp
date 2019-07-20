@@ -1,7 +1,7 @@
 <template>
   <div class="container">
     <header class="header hea1">
-      <van-icon class="hea1_1" size="0.25rem" name="arrow-left" />
+      <van-icon class="hea1_1" size="0.25rem" name="arrow-left" @click="back"/>
       <van-search class="ss" placeholder="搜索商品/店铺/种类" />
       <van-icon class="hea1_1" size="0.25rem" name="ellipsis" />
     </header>
@@ -14,6 +14,11 @@
             <van-sidebar-item title="电子书" />
             <van-sidebar-item title="网络文学" />
             <van-sidebar-item title="创意文学" />
+            <van-sidebar-item title="旧书" />
+            <van-sidebar-item title="天方夜谈" />
+            <van-sidebar-item title="情感文学" />
+            <van-sidebar-item title="千峰书斋" />
+            <van-sidebar-item title="扣丁学堂" />
           </van-sidebar>
         </div>
         <!-- 数据内容 -->
@@ -28,15 +33,13 @@
                 text="进入当当书城 >"
               />
             </van-grid>
-
           <van-grid :column-num="3" class="mg">
             <van-grid-item v-for="value in 6" :key="value" :icon= "imgs[value]" :text="infs[value]" @click="ckmg(ids[value])" />
           </van-grid>
-
           <div class="m0">
             <div class="m1">
-              <span>小说 <van-icon name="arrow" /> </span> 
-              <span>畅销榜<van-icon name="arrow" /> </span> 
+              <span>小说 <van-icon name="arrow" /></span>
+              <span>畅销榜<van-icon name="arrow" /></span>
             </div>
             <div class="m2">
               <ul class="m2_1">
@@ -59,118 +62,139 @@
                 <li> <span>未解之谜</span> </li>
               </ul>
             </div>
+
+            <div class="m1">
+              <span>千峰学院 <van-icon name="arrow" /></span>
+              <span>热门学科<van-icon name="arrow" /></span>
+            </div>
+            <div class="m2">
+              <ul class="m2_1">
+                <li> <span>H5大前端</span> </li>
+                <li> <span>JAVA</span> </li>
+                <li> <span>扣丁学堂</span> </li>
+              </ul>
+            </div>
           </div>
         </div>
       </div>
     </div>
   </div>
 </template>
-
 <script>
 import Vue from 'vue'
-// import { NavBar } from 'vant'
-import { Icon , Search ,Sidebar, SidebarItem, Grid, GridItem } from 'vant'
-// Vue.use(NavBar )
-Vue.use(Icon )
+import { Icon, Search, Sidebar, SidebarItem, Grid, GridItem } from 'vant'
+Vue.use(Icon)
 Vue.use(Search)
 Vue.use(Sidebar)
 Vue.use(SidebarItem)
 Vue.use(Grid).use(GridItem)
-function getRandomInt(min, max) {
-  return Math.floor(Math.random() * (max - min + 1)) + min;
+function getRandomInt (min, max) {
+  return Math.floor(Math.random() * (max - min + 1)) + min
 }
 export default {
-  data() {
+  data () {
     return {
       activeKey: 0,
-      navherf:[],
-      infot:[],
-      imgs:[],
-      infs:[],
-      ids:[]
-    };
+      navherf: [],
+      infot: [],
+      imgs: [],
+      infs: [],
+      ids: []
+    }
   },
-  mounted(){
-    fetch('http://10.11.56.121:3000/124').then(res=>res.json()).then(data=>{
-      var info=data[0].data ,arr=[],arr1=[],arr2=[],arrid=[]
-      for(var key in info){
-        if (info[key].length>5){
+  mounted () {
+    fetch('http://10.11.56.121:3000/124').then(res => res.json()).then(data => {
+      var info = data[0].data
+      var arr = []
+      var arr1 = []
+      var arr2 = []
+      var arrid = []
+      for (var key in info) {
+        if (info[key].length > 5) {
           arr2.push(key)
         }
       }
-      var infr=info[arr2[this.activeKey]]
-      for(var i=0;i<infr.length;i++){
+      var infr = info[arr2[this.activeKey]]
+      for (var i = 0; i < infr.length; i++) {
         arr.push(infr[i].src)
         arrid.push(infr[i].goods_id)
-        let s=infr[i].short_name
-        if(s.length>=4){
-          s = s.slice(0,3)+"..."
+        let s = infr[i].short_name
+        if (s.length >= 4) {
+          s = s.slice(0, 3) + '...'
         }
         arr1.push(s)
       }
-      this.imgs=arr
-      this.infs=arr1
-      this.infot=arr2
-      this.ids=arrid
+      this.imgs = arr
+      this.infs = arr1
+      this.infot = arr2
+      this.ids = arrid
     })
 
-    this.navherf=[
-      "http://img62.ddimg.cn/ddreader/dangebook/7ysd-886x315.jpg",
-     " http://img61.ddimg.cn/upload_img/00796/1/886-315-1563159506.jpg",
-      "http://img62.ddimg.cn/upload_img/00785/ts0711_0722/886-315-1562725432.jpg",
-      "http://img63.ddimg.cn/ddreader/1111/lixiangguo886-315.jpg",
-      "http://img63.ddimg.cn/ww/9/10/ddflxm531.jpg",
-      "http://img52.ddimg.cn/117110046750112_y.jpg"
+    this.navherf = [
+      'http://img62.ddimg.cn/ddreader/dangebook/7ysd-886x315.jpg',
+      'http://img61.ddimg.cn/upload_img/00796/1/886-315-1563159506.jpg',
+      'http://img62.ddimg.cn/upload_img/00785/ts0711_0722/886-315-1562725432.jpg',
+      'http://img63.ddimg.cn/ddreader/1111/lixiangguo886-315.jpg',
+      'http://img63.ddimg.cn/ww/9/10/ddflxm531.jpg',
+      'http://img55.ddimg.cn/69980070477555_y.jpg',
+      'http://img62.ddimg.cn/upload_img/00796/1/886x315_lyx_0709-1562737521.jpg',
+      'http://img60.ddimg.cn/upload_img/00271/1/886-315-1-1562575086.jpg',
+      'http://img52.ddimg.cn/117110046750112_y.jpg',
+      'http://img52.ddimg.cn/174040054772182_y.jpg'
     ]
   },
-  methods:{
-    getchange(){
-      fetch('http://10.11.56.121:3000/124').then(res=>res.json()).then(data=>{
-        var info=data[0].data ,arr=[],arr1=[],arr2=[],arrid=[]
-        for(var key in info){
-          if (info[key].length>5){
+  methods: {
+    back () {
+      this.$router.back()
+    },
+    getchange () {
+      fetch('http://10.11.56.121:3000/124').then(res => res.json()).then(data => {
+        var info = data[0].data
+        var arr = []
+        var arr1 = []
+        var arr2 = []
+        var arrid = []
+        for (var key in info) {
+          if (info[key].length > 5) {
             arr2.push(key)
           }
         }
-        var infr=info[arr2[this.activeKey]]
-        for(var i=0;i<infr.length;i++){
+        var infr = info[arr2[this.activeKey]]
+        for (var i = 0; i < infr.length; i++) {
           arr.push(infr[i].src)
           arrid.push(infr[i].goods_id)
-          let s=infr[i].short_name
-          if(s.length>=4){
-            s = s.slice(0,3)+"..."
+          let s = infr[i].short_name
+          if (s.length >= 4) {
+            s = s.slice(0, 3) + '...'
           }
           arr1.push(s)
         }
-
-        //随机获得6个不重复的数字
-        var tab=[]
-        while(true){
-          var num=getRandomInt(0,infr.length-1)
-          if(tab.indexOf(num) === -1){
+        var tab = []
+        while (true) {
+          var num = getRandomInt(0, infr.length - 1)
+          if (tab.indexOf(num) === -1) {
             tab.push(num)
           }
-          if(tab.length===7){break}
+          if (tab.length === 7) { break }
         }
-        let ar0=[],ar1=[],arid=[]
+        let ar0 = []
+        let ar1 = []
+        let arid = []
         for (let i = 0; i < tab.length; i++) {
           ar0.push(arr[tab[i]])
           ar1.push(arr1[tab[i]])
           arid.push(arrid[tab[i]])
         }
-        this.imgs=ar0
-        this.infs=ar1
-        this.ids=arid
+        this.imgs = ar0
+        this.infs = ar1
+        this.ids = arid
       })
     },
-    ckmg(id){
-      //console.log(id)
+    ckmg (id) {
       this.$router.push({ path: '/detail/' + id })
     }
   }
-  
-};
-
+}
 </script>
 
 <style lang="scss">
@@ -193,7 +217,6 @@ export default {
     text-align: center;
     overflow: hidden;
     img{
-      // height: 100%;
       width:100%;
     }
   }
@@ -205,10 +228,9 @@ export default {
   }
   .m0{
     padding:10px;
-    // border:1px solid #ccc;
-    // min-height: 300px;
     .m1{
-      font-size: 12px;
+      margin-top:20px;
+      font-size: 14px;
       overflow: auto;
       span:first-child{
         float: left;

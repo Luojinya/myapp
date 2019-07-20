@@ -1,148 +1,262 @@
 <template>
   <div class="container">
-    <header class="header">首页头部</header>
-      <div class="content" id="content">
-        <van-pull-refresh v-model="isLoading" @refresh="onRefresh">
-          <van-swipe :autoplay="3000" indicator-color="white">
-            <van-swipe-item v-for="(item, index) of bannerlist" :key = "index">
-              <img :src="item" alt="">
-            </van-swipe-item>
-          </van-swipe>
-          <van-list
-            v-model="loading"
-            :finished="finished"
-            finished-text="没有更多了"
-            @load="onLoad"
-          >
-            <Prolist :wuxunxun = "daxun" />
-          </van-list>
-      </van-pull-refresh>
-      <Backtop v-show="flag" />
+    <header class="header">
+      <div class="header_left">
+        <img src="https://timgsa.baidu.com/timg?image&quality=80&size=b9999_10000&sec=1563795668&di=d8495ee7b9f86f95592890522278183d&imgtype=jpg&er=1&src=http%3A%2F%2Fcdn6.haitou.cc%2Fbrand%2Flogo%2F81%2F34181.png" alt="">
       </div>
+      <div class="header_middle">
+        <input type="text" @click="serarch">
+      </div>
+      <div class="header_right">
+       <span class = "iconfont icon-fenlei"></span>
+      </div>
+    </header>
+    <div class="content" v-if=!tag>
+
+    </div>
+    <div class="content" v-if=tag>
+      <div class="banner">
+         <van-swipe :autoplay="3000" indicator-color="white" class="bannerbox">
+         <van-swipe-item>
+           <img src="http://img60.ddimg.cn/upload_img/00803/1/1242x366_lyx_0709-1562920620.jpg">
+         </van-swipe-item>
+         <van-swipe-item>
+           <img src="http://img62.ddimg.cn/upload_img/00678/zsts/1242-366_3-1563156988.jpg">
+         </van-swipe-item>
+         <van-swipe-item>
+           <img src="http://img55.ddimg.cn/216110046839445_y.jpg">
+         </van-swipe-item>
+         <van-swipe-item>
+           <img src="http://img51.ddimg.cn/209270064665671_y.jpg">
+         </van-swipe-item>
+       </van-swipe>
+      </div>
+       <div class="kind">
+         <ul>
+           <li @click="change">
+             <img src="http://img61.ddimg.cn/upload_img/00803/1/chagnxiao-1562827477.png" alt="">
+           </li>
+           <li @click="change">
+             <img src="http://img61.ddimg.cn/upload_img/00796/1/xinshu-1563173497.png" alt="">
+           </li>
+           <li @click="change">
+             <img src="http://img62.ddimg.cn/upload_img/00702/B/SY-iCON-3-5.10-1557488951.png" alt="">
+           </li>
+           <li @click="change">
+             <img src="http://img60.ddimg.cn/upload_img/00702/T/icon-cx-1559818801.png" alt="">
+           </li>
+           <li @click="change">
+             <img src="http://img62.ddimg.cn/upload_img/00705/B/icon-5.28-1559032809.png" alt="">
+           </li>
+         </ul>
+       </div>
+       <div class="brand">
+         <div class="imgbox">
+           <img src="http://img61.ddimg.cn/upload_img/00528/000000/biaoti-101-1523330132.jpg" alt="">
+         </div>
+           <van-swipe :autoplay="3000" indicator-color="white" class="brand_body">
+         <van-swipe-item>
+            <div class="todayBrand">
+              <van-list
+                  v-model="loading"
+                  :finished="finished"
+                  finished-text="没有更多了"
+                  @load="onLoad"
+                >
+                 <Prolist1 :goodlist1 = "goodlist1"/>
+                </van-list>
+            </div>
+         </van-swipe-item>
+         <van-swipe-item>
+             <div class="todayBrand">
+               <van-list
+                  v-model="loading"
+                  :finished="finished"
+                  finished-text="没有更多了"
+                  @load="onLoad"
+                >
+                 <Prolist :prolist = "prolist"/>
+                </van-list>
+             </div>
+         </van-swipe-item>
+         <van-swipe-item>
+             <div class="todayBrand">
+              <van-list
+                  v-model="loading"
+                  :finished="finished"
+                  finished-text="没有更多了"
+                  @load="onLoad"
+                >
+                 <Prolist2 :goodlist3 = "goodlist3"/>
+                </van-list>
+             </div>
+         </van-swipe-item>
+       </van-swipe>
+       </div>
+       <div class="banner">
+         <img src="http://img61.ddimg.cn/upload_img/00670/qd/d33333333333-1562817010.jpg" alt="">
+       </div>
+       <div class="shop">
+         <img src="http://img61.ddimg.cn/upload_img/00705/yhj/tslc-bt.jpg" alt="" class="imgc">
+         <Prolist3 :prolist3 = "prolist3"></Prolist3>
+       </div>
+       <div class="love">
+         <p><span class="iconfont icon-smile"></span>根据您的喜好，给您的推荐</p>
+       </div>
+       <div class="recommend">
+          <AllProlist :allgoodlist = "allgoodlist"/>
+       </div>
+    </div>
   </div>
 </template>
 
 <script>
-import Vue from 'vue'
-import { Swipe , SwipeItem,List,PullRefresh} from 'vant'
 
+import Vue from 'vue'
+import { Swipe, SwipeItem, List, PullRefresh, Icon } from 'vant'
 import Prolist from '@/components/common/Prolist'
-import Backtop from '@/components/Backtop'
+import Prolist1 from '@/components/common/Prolist1'
+import Prolist2 from '@/components/common/Prolist2'
+import Prolist3 from '@/components/common/Prolist3'
+import AllProlist from '@/components/common/AllProlist'
+
 Vue.use(Swipe).use(SwipeItem)
 Vue.use(List)
 Vue.use(PullRefresh)
-
-// var t=[3,2,5,12,8]
-// t=[...t,[555,555,555]]
-// console.log(t)
+Vue.use(Icon)
 export default {
- 
-  data () { 
-    return { 
-      bannerlist:[],
-      // prolist: [],
-      daxun: [],
-      loading:false,
-      finished:false,
-      pageNum:1,
-      isLoading:false,
-      flag:false
-    }
-  },
-  methods:{
-    onRefresh(){
-      this.isLoading=true
-      fetch('https://www.daxunxun.com/douban').then(res=>res.json()).then(data=>{
-        this.isLoading=false//下拉刷新结束
-        this.daxun=data//重置列表的数据
-        this.pageNum=1//重置页码 --- 下拉刷新相当于第一页数据
-        this.finished=false// 表示可以继续上拉加载下一页的数据
-      })
-    },
-    onLoad () {
-      console.log("可以加载数据了")
-      this.loading = true //数据加载开始
-      fetch('https://www.daxunxun.com/douban?count=20&start='+ this.pageNum*20)
-      .then(res=>res.json()).then(data => {
-        this.loading = false //数据加载完毕
-        this.pageNum++
-        if(data.length === 0){
-          console.log("没有数据了哦")
-          this.finished = true//没有数据了哦
-        }else{
-          //合并数组
-          this.daxun=[...this.daxun, ...data]
-        }
-      })
-    },
-    scrollFn () {
-      // console.log(event.target.scrollTop)
-      if (event.target.scrollTop > 150) {
-        this.flag = true
-      } else {
-        this.flag = false
-      }
+  data () {
+    return {
+      navlistt: [],
+      goodlist1: [],
+      prolist: [],
+      goodlist3: [],
+      prolist3: [],
+      loading: false,
+      finished: false,
+      allgoodlist: {},
+      tag: true
     }
   },
   components: {
-    Prolist, // Prolist: Prolist
-    Backtop
+    Prolist,
+    Prolist1,
+    Prolist2,
+    Prolist3,
+    AllProlist
   },
-  mounted(){
-    fetch('https://www.daxunxun.com/banner').then(res=>res.json()).then(data=>{
-      // console.log(data)
-      var arr=[]
-      data.map(item=>{
-        item='https://www.daxunxun.com'+item
-        arr.push(item)
-      })
-      this.bannerlist=arr
-    })
+  methods: {
+    change () {
+      this.$router.push('/kind')
+    },
+    onLoad () {
 
-
-    fetch("https://www.daxunxun.com/douban").then(res=>res.json()).then(data=>{
-      // console.log("first:" + data)
-      this.daxun = data
-    })
-
-    // 找到DOM节点
-    const content = document.querySelector('#content')
-    // 开启监听滚动条的滚动事件
-    content.addEventListener('scroll', this.scrollFn)
-  },
-  beforeRouteLeave (from, to, next) { // 在离开这个路由之前 --- 导航守卫
-    const content = document.querySelector('#content')
-    content.removeEventListener('scroll', this.scrollFn)
-    let position = content.scrollTop
-    localStorage.setItem("position",position)// 存储滚动条位置
-    next() // 继续执行后续的业务逻辑
-  },
-  watch: {
-    $route (newVal,oldVal){
-      if (newVal.name === 'home') {
-        const content = document.querySelector('#content')
-        content.scrollTop = localStorage.getItem("position")
-      }
-      //  console.log("这是homeindex.vue的watch")
+    },
+    serarch () {
+      this.tag = !this.tag
     }
+  },
+  mounted () {
+    fetch('http://10.11.56.121:3000/124').then(res => res.json()).then(data => {
+      // console.log(data[0].data)
+      this.allgoodlist = data[0].data
+      this.goodlist1 = data[0].data.literature
+      this.prolist = data[0].data.Children_Books
+      this.goodlist3 = data[0].data.socialscience
+      this.prolist3 = data[0].data.socialscience
+      // console.log(this.goodlist1, this.goodlist2, this.goodlist3)
+    })
   }
 }
 </script>
+<style lang="scss" scoped>
+@import '@/lib/reset.scss';
+.banner{
+  margin-top:10px;
+  height:1.5rem;
+}
+.header_left{
+  height:100%;
+  width:20%;
+  img{
+    width:60%;
+  }
+}
+.header_middle{
+  height:100%;
+  width:60%;
+  line-height: 50px;
+      input{
+         width:100%;
+         height:80%;
+         border: 1px solid #efefef;
+         border-radius: 20px;
+         text-indent: 20px;
+      }
+}
+.header_right{
+  height:100%;
+  width:20%;
+  text-align:center;
+  line-height: 50px;
+  span {
+          @include font-size(24px);
+          margin-left:10px;
+        }
+        p {
+          @include font-size(12px);
+        }
 
-<style lang="scss">
-  .van-swipe{
-    height: 2rem;
-    img{
-      width: 100%;
-    }
+}
+.bannerbox{
+   height:100%;
+}
+.van-swipe {
+  height: 1.5rem;
+  img {
+    width: 100%;
+    height:100%;
   }
-  .backTop {
-    position: fixed;
-    bottom: 0.6rem;
-    right: 15px;
-    width: 30px;
-    height: 30px;
-    background-color: #fff;
-    border-radius: 50%;
+}
+.kind{
+   @include rect(100%, 0.8rem);
+   ul{
+     @include flexbox();
+     @include justify-content($justify-content:space-around);
+     @include align-items();
+     li{
+       img{
+         width:100%;
+         height:80%;
+       }
+     }
+   }
+}
+.brand{
+  height:2.6rem;
+}
+.brand_body{
+  height:74%;
+}
+.imgbox{
+  img{
+    width:100%;
   }
+}
+.banner{
+  img{
+    width:100%;
+  }
+}
+.shop{
+  height:4.4rem;
+  overflow: hidden;
+  .imgc{
+    width:100%;
+  }
+}
+.love{
+  text-align: center;
+  background: #efefef;
+}
 </style>
