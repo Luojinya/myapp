@@ -24,7 +24,7 @@
           :thumb="item.thumb"
         />
         <div class="delet">
-          <button @click= "delet">删除</button>
+          <button @click= "delet(item.id)">删除</button>
         </div>
 
       </van-checkbox>
@@ -132,10 +132,11 @@ export default {
     }
   },
   methods:{
-    delet(e){
+    delet(id,e){
       var e=e||window.event
       e.stopPropagation()
       // e.cancelBubble = true;
+      console.log(id)
     },
     onClickLeft () {
       this.$router.back()
