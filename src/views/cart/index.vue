@@ -23,6 +23,9 @@
           :price="formatPrice(item.price)"
           :thumb="item.thumb"
         />
+        <div class="delet">
+          <button @click= "delet">删除</button>
+        </div>
 
       </van-checkbox>
     </van-checkbox-group>
@@ -129,6 +132,11 @@ export default {
     }
   },
   methods:{
+    delet(e){
+      var e=e||window.event
+      e.stopPropagation()
+      // e.cancelBubble = true;
+    },
     onClickLeft () {
       this.$router.back()
     },
@@ -242,6 +250,20 @@ export default {
     }
     .van-card__price {
       color: #f44;
+    }
+    .delet{
+      position: absolute;
+      bottom: 10px;
+      right:10px;
+      font-size:12px;
+      
+      button{
+        padding:0 8px;
+        border:1px solid #dfdfdf;
+        background-color: #fff;
+        // background-color: red;
+        // border-radius: 2px;
+      }
     }
   }
 }
